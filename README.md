@@ -1,91 +1,122 @@
+# 🧠 Fetal Brain Abnormalities Detection
+
+### Deep Learning • YOLOv5 • Ultrasound Imaging • Flask Web App
+
+This repository contains a complete end-to-end system for detecting **fetal brain abnormalities** from ultrasound images using **YOLOv5**, **Python**, **OpenCV**, and a **Flask-based web interface**.
+
+The goal is to support **early diagnosis** by enabling automated detection of abnormalities in fetal brain ultrasound scans.
+
+---
 
 <div align="center">
 
-# 🧠 Fetal Brain Abnormalities Detection  
-### Using Deep Learning, YOLOv5, and Ultrasound Imaging
+### ⭐ Technologies Used
 
-A complete end-to-end system for detecting **fetal brain abnormalities** from ultrasound images using **YOLOv5**, **Python**, **OpenCV**, and a **Flask web interface**.
+**Python · YOLOv5 · OpenCV · Flask · SQLite · Roboflow Dataset · Deep Learning**
 
 </div>
 
 ---
 
-## 🏆 Overview
+## 📌 Features
 
-This project aims to assist **early diagnosis** of fetal brain abnormalities by providing an automated, fast, and accurate computer-vision–based detection system.
-
-✔ Trained on a **Roboflow fetal-brain dataset** (1391 images)  
-✔ Real-time detection using YOLOv5  
-✔ Web dashboard for uploading & analyzing ultrasound images  
-✔ SQLite-based user authentication system  
-✔ Automatic before/after comparison visualization  
-
----
-
-## 🚀 Features
-
-- 🧠 **YOLOv5-based abnormality detection**
-- ⚡ **Real-time inference** via Flask
-- 📊 **Preprocessed ultrasound dataset**
-- 🖼️ **Bounding-box visualization**
-- 👤 **User Login/Registration**
-- 💾 **Results automatically saved**
-- 🔧 **Easy to deploy & extend**
+* 🧠 **YOLOv5-based detection** of fetal brain abnormalities
+* ⚡ **Real-time inference** through a Flask web dashboard
+* 📝 **User authentication system** (SQLite)
+* 🖼️ Upload ultrasound images for instant prediction
+* 🔍 Bounding box visualization on detected anomalies
+* 💾 Auto-save of test images & results
+* 🔧 Fully customizable and extendable architecture
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure (Matches Your GitHub Repo)
 
 ```
 .
-├── app.py                # Flask web server
-├── detect.py             # YOLOv5 detection logic
-├── train.py              # YOLOv5 training module
-├── val.py                # Model validation
-├── export.py             # Export to ONNX/TFLite/CoreML
-├── requirements.txt      # Dependencies
-├── best.pt               # Trained YOLOv5 model weights
-├── static/
-│   ├── test/             # Input images
-│   └── result/           # Output images with boxes
-└── templates/
-    ├── index.html        # Login page
-    └── userlog.html      # Upload & analysis dashboard
+├── __pycache__/              # Python cache files
+├── datasets/                 # Dataset folder (Roboflow dataset files)
+├── models/                   # YOLO model configuration files
+├── result/                   # Detection outputs (if saved manually)
+├── runs/
+│   └── detect/               # YOLOv5 detection run outputs
+├── segment/                  # Segmentation-related files (if used)
+├── static/                   
+│   ├── test/                 # User-uploaded input images
+│   └── result/               # Output images after detection
+├── templates/
+│   ├── index.html            # Login / Register page
+│   └── userlog.html          # Analysis dashboard
+├── utils/                    # YOLO utility scripts
+│
+├── README.dataset.txt        # Dataset summary
+├── README.roboflow.txt       # Roboflow export details
+├── README.md                 # Project documentation
+│
+├── app.py                    # Flask backend
+├── best.pt                   # Trained YOLOv5 model weights
+├── detect.py                 # Object detection script
+├── export.py                 # Export model to ONNX / TFLite
+├── requirements.txt          # Python dependencies
+├── train.py                  # Model training script
+├── tutorial.ipynb            # Jupyter Notebook for testing/analysis
+├── user_data.db              # SQLite User database
+└── val.py                    # Validation script
 ```
 
 ---
 
-## 🔬 Dataset Details
+## 📊 Dataset Information
 
-- **Source:** Roboflow Universe  
-- **Images:** 1391 ultrasound images  
-- **Format:** YOLOv5  
-- **Pre-processing:**  
-  - Auto-orientation  
-  - Resize to **640×640**  
-  - Annotations included  
+* **Source:** Roboflow Universe
+* **Total Images:** *1391 fetal brain ultrasound images*
+* **Annotation Format:** YOLOv5 (Bounding boxes)
+* **Preprocessing Applied:**
+
+  * EXIF orientation correction
+  * Resized to **640×640**
+  * Auto-oriented pixel data
+
+> The dataset is stored inside the `datasets/` directory.
 
 ---
 
-## 🧠 Model Training
+## 🧠 Model Architecture (YOLOv5)
 
-To train the YOLOv5 model with your dataset:
+This project uses **YOLOv5** for object detection because of its:
+✔ Fast inference
+✔ High accuracy
+✔ Ease of training on custom datasets
+
+Training scripts (`train.py`, `val.py`) are included and fully configurable.
+
+---
+
+## 🚀 Training the Model
+
+To retrain the model:
 
 ```bash
 python train.py --data data.yaml --weights yolov5s.pt --img 640 --epochs 50
 ```
 
-You may use YOLOv5 pre-trained weights or train from scratch.
+This will generate new weights inside:
+
+```
+runs/train/exp/weights/best.pt
+```
 
 ---
 
-## 🔍 Running Inference (CLI)
+## 🔍 Running YOLO Detection (CLI)
+
+Detect abnormalities on a folder or single image:
 
 ```bash
-python detect.py --weights best.pt --source path/to/image.jpg
+python detect.py --weights best.pt --source static/test/
 ```
 
-Detection results are saved under:
+Output images will be saved under:
 
 ```
 runs/detect/exp/
@@ -93,85 +124,91 @@ runs/detect/exp/
 
 ---
 
-## 🌐 Running the Web App
+## 🌐 Running the Web Application
 
-### 1️⃣ Install dependencies
+### 1️⃣ Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Start Flask server
+### 2️⃣ Launch Flask Server
+
 ```bash
 python app.py
 ```
 
-### 3️⃣ Open browser
+### 3️⃣ Visit the Web Portal
+
+Open your browser:
+
 ```
 http://127.0.0.1:5000/
 ```
 
-### Web Features
-- Upload an ultrasound image  
-- Backend runs YOLOv5 detection  
-- Shows **original** and **detected** image side-by-side  
-- Saves results for review  
+### Web Features:
+
+* Login / Register using SQLite
+* Upload ultrasound image
+* YOLO model generates detection
+* Shows **Original Image vs Detected Image**
+* Result saved in `static/result/`
 
 ---
 
-## 📸 Sample Workflow
+## 🖼️ How It Works (Workflow)
 
-1. **User uploads ultrasound scan**  
-2. **Model detects abnormalities**  
-3. **Bounding boxes are drawn**  
-4. **Results displayed instantly**  
-5. **Image saved to /static/result**  
+1. Upload fetal ultrasound scan
+2. Flask sends image to YOLO model
+3. YOLOv5 performs detection
+4. Bounding boxes drawn around abnormalities
+5. Output displayed instantly
+6. Images saved for review
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|----------|------------|
-| Model | YOLOv5, PyTorch |
-| Language | Python |
-| CV Library | OpenCV |
-| Web Framework | Flask |
-| Database | SQLite |
-| Frontend | HTML, CSS |
+| Component       | Technology      |
+| --------------- | --------------- |
+| Deep Learning   | YOLOv5, PyTorch |
+| Computer Vision | OpenCV          |
+| Web Framework   | Flask           |
+| Backend         | Python          |
+| Database        | SQLite          |
+| Frontend        | HTML, CSS       |
 
 ---
 
-## 🚀 Future Enhancements
+## 🚀 Future Improvements
 
-- Add classification probability charts  
-- Support DICOM images  
-- Add multi-class abnormality detection  
-- Deploy on cloud (AWS / Render / HuggingFace Spaces)  
-- Mobile-friendly UI  
+* Add support for **multi-class fetal abnormality detection**
+* Deploy to **Render / Railway / AWS / HuggingFace Spaces**
+* Convert to **ONNX or TFLite** for mobile deployment
+* Add charts & detection confidence summary
+* Add DICOM support (for medical imaging workflows)
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests and issue reports are welcome!  
-Feel free to fork this repo and enhance the model or UI.
+Contributions are welcome!
+Fork the repo → Make improvements → Create a Pull Request.
 
 ---
 
 ## 📜 License
 
-This project is for educational and research purposes.
-
----
-
-## ⭐ Support
-
-If you found this project useful, please consider giving a **star ⭐ on GitHub**!
+This project is intended for **research and educational purposes** only.
+Not approved for clinical or diagnostic medical use.
 
 ---
 
 <div align="center">
 
-### Made with ❤️ using Python, Deep Learning, and Ultrasound AI
+### ⭐ If you like this project, please give it a star on GitHub!
+
+Built with ❤️ using Python, Deep Learning & Medical Imaging.
 
 </div>
+
